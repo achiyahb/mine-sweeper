@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import './slot.css'
 
 interface Props {
     isMine: boolean;
@@ -13,6 +14,15 @@ interface Props {
 export const Slot = ({isMine, isReveal, handleClick, nextMinesNumber, isExploded, isSetFlag,handleFlagSetting}: Props) => {
     const [reveal, setReveal] = useState(false)
 
+    const convertSlotMinesNumberToColor = (slotMines: number) => {
+        switch (slotMines) {
+            case 1: return 'blue'
+            case 2: return 'green'
+            case 3: return 'red'
+            default: return 'black'
+        }
+    }
+
     useEffect(() => {
         if (isReveal) {
             setReveal(true)
@@ -20,22 +30,16 @@ export const Slot = ({isMine, isReveal, handleClick, nextMinesNumber, isExploded
     }, [isReveal])
 
     if (!reveal) {
-        return <div style={{
-            borderColor: "black",
-            border: '1px solid rgba(25, 118, 210, 0.5)',
-            backgroundColor: 'grey',
-            width: '20px',
-            height: '20px'
-        }} onClick={handleClick} onContextMenu={(e)=>{
+        return <div 
+        className="slot unrevealed"
+        onClick={handleClick} onContextMenu={(e)=>{
             handleFlagSetting()
             e.preventDefault()
         }}>{isSetFlag&&'F'}</div>
     }
-    return <div style={{
-        borderColor: "black",
-        border: '1px solid rgba(25, 118, 210, 0.5)',
-        width: '20px',
-        height: '20px',
-        backgroundColor: isExploded ? 'red' : 'white',
+    return <div 
+    className="slot revealed"
+    style={{
+        color: convertSlotMinesNumberToColor(nextMinesNumber),
     }}>{isMine ? 'X' : nextMinesNumber ? nextMinesNumber : ' '}</div>
 }
