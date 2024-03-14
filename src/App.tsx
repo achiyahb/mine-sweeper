@@ -4,8 +4,8 @@ import {ControlPanel} from "./components/control-panel/control-panel.tsx";
 import {useState} from "react";
 
 function App() {
-    const [rowNumber, setRowNumber] = useState(0)
-    const [minesNumber, setMinesNumber] = useState(0)
+    const [rowNumber, setRowNumber] = useState(15)
+    const [minesNumber, setMinesNumber] = useState(45)
     const [isGameStart, setIsGameStart] = useState(false)
 
 
