@@ -21,3 +21,6 @@
     font-size: 10px;
     padding-bottom: 2px;
 }
+.slot.exploded{
+    background-color: rgb(243, 2, 2);
+}

@@ -38,7 +38,7 @@ export const Slot = ({isMine, isReveal, handleClick, nextMinesNumber, isExploded
         }}>{isSetFlag&&<div className="unicode-icon">🚩</div>}</div>
     }
     return <div 
-    className="slot revealed"
+    className={`slot revealed ${isExploded && 'exploded'}`}
     style={{
         color: convertSlotMinesNumberToColor(nextMinesNumber),
     }}>{isMine ? <div className="unicode-icon">&#x1F4A3;</div> : nextMinesNumber ? nextMinesNumber : ' '}</div>
