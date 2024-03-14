@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
 import {Grid} from "@mui/material";
 
-import {Slot} from "./slot";
+import {Slot} from "../slot/slot.tsx";
 
 interface Props {
-    baseArray: number[]
-    minesPerRow: number
+    rowNumber: number
+    minesNumber: number
 }
 
-export const Board = ({baseArray, minesPerRow}: Props) => {
+export const Board = ({rowNumber, minesNumber}: Props) => {
     const [isGameOver, setIsGameOver] = useState(false)
     const [matrix, setMatrix] = useState<{
         isMine: boolean;
@@ -20,7 +20,7 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
     const [tryingCounter, setTryingCounter] = useState<number>(0)
     const [firstChoice, setFirstChoice] = useState<{ rowKey: number; slotKey: number } | undefined>(undefined)
     const [flagCounter, setFlagCounter] = useState<number>(0)
-    const [remainingSlots, setRemainingSlots] = useState<number>(baseArray.length * baseArray.length)
+    const [remainingSlots, setRemainingSlots] = useState<number>(rowNumber * rowNumber)
     const [isWin, setIsWin] = useState(false)
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
             return acc + rowCount
         }, 0)
         setRemainingSlots(remaining)
-        if (remaining === baseArray.length * minesPerRow) {
+        if (remaining === minesNumber) {
             setIsWin(true)
         }
     }, [tryingCounter])
@@ -57,23 +57,23 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
                 if (slotKey - 1 >= 0) {
                     setRevealSlot(rowKey - 1, slotKey - 1)
                 }
-                if (slotKey + 1 < baseArray.length) {
+                if (slotKey + 1 < rowNumber) {
                     setRevealSlot(rowKey - 1, slotKey + 1)
                 }
             }
-            if (rowKey + 1 < baseArray.length) {
+            if (rowKey + 1 < rowNumber) {
                 setRevealSlot(rowKey + 1, slotKey)
                 if (slotKey - 1 >= 0) {
                     setRevealSlot(rowKey + 1, slotKey - 1)
                 }
-                if (slotKey + 1 < baseArray.length) {
+                if (slotKey + 1 < rowNumber) {
                     setRevealSlot(rowKey + 1, slotKey + 1)
                 }
             }
             if (slotKey - 1 >= 0) {
                 setRevealSlot(rowKey, slotKey - 1)
             }
-            if (slotKey + 1 < baseArray.length) {
+            if (slotKey + 1 < rowNumber) {
                 setRevealSlot(rowKey, slotKey + 1)
             }
         }
@@ -111,8 +111,8 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
                 if (slot.isMine) {
                     const isLeftAllowed = slotKey - 1 >= 0
                     const isUpAllowed = rowKey - 1 >= 0
-                    const isRightAllowed = slotKey + 1 < baseArray.length
-                    const isDownAllowed = rowKey + 1 < baseArray.length
+                    const isRightAllowed = slotKey + 1 < rowNumber
+                    const isDownAllowed = rowKey + 1 < rowNumber
                     const rowKeys = [rowKey];
                     const slotKeys = [slotKey]
                     if (isLeftAllowed) {
@@ -142,8 +142,8 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
     }
 
     useEffect(() => {
-        const newMatrix = baseArray.map(() => {
-            return baseArray.map((_, key) => ({
+        const newMatrix = Array.from(Array(rowNumber)).map(() => {
+            return Array.from(Array(rowNumber)).map(() => ({
                 isMine: false,
                 isReveal: false,
                 nextMinesNumber: 0,
@@ -153,27 +153,25 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
     }, [])
 
     const initGameBoard = (rowKey: number, slotKey: number) => {
-        const newMatrix = baseArray.map((_, rowIndex) => {
-            const rowMinesHm: Record<number, boolean | undefined> = {}
-            for (let i = 0; i < minesPerRow;) {
-                const index = Math.floor(Math.random() * baseArray.length)
-                if (rowIndex === rowKey || rowIndex === rowKey - 1 || rowIndex === rowKey + 1) {
-                    if (index === slotKey || index === slotKey - 1 || index === slotKey + 1) {
-                        continue
-                    }
-                }
-                if (!rowMinesHm[index]) {
-                    rowMinesHm[index] = true
-                    i++
+        const rowMinesHm:Record<number, Record<number, boolean>> = {}
+        for (let i = 0; i < minesNumber;) {
+            const index = Math.floor(Math.random() * rowNumber)
+            const rowIndex = Math.floor(Math.random() * rowNumber)
+            if (rowIndex === rowKey || rowIndex === rowKey - 1 || rowIndex === rowKey + 1) {
+                if (index === slotKey || index === slotKey - 1 || index === slotKey + 1) {
+                    continue
                 }
             }
-            return baseArray.map((_, key) => ({
-                isMine: !!rowMinesHm[key],
-                isReveal: false,
-                nextMinesNumber: 0,
-            }))
-        })
-        const matrixWithCountMines = countNextMines(newMatrix)
+            if (!rowMinesHm[rowIndex]) {
+                rowMinesHm[rowIndex] = {}
+            }
+            if (!rowMinesHm[rowIndex][index]) {
+                rowMinesHm[rowIndex][index] = true
+                matrix[rowIndex][index].isMine = true
+                i++
+            }
+        }
+        const matrixWithCountMines = countNextMines(matrix)
         setFirstChoice({rowKey, slotKey})
         setMatrix(matrixWithCountMines)
     }
@@ -198,7 +196,7 @@ export const Board = ({baseArray, minesPerRow}: Props) => {
                         {row.map((slot, slotKey) =>
                             <Grid item>
                                 <Slot isMine={slot.isMine} key={slotKey}
-                                      handleClick={(e) => {
+                                      handleClick={() => {
                                           handleClick(rowKey, slotKey)
                                       }}
                                       isReveal={slot.isReveal}

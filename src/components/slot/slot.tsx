@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 interface Props {
     isMine: boolean;
     isReveal: boolean;
-    handleClick: (e: any) => void;
+    handleClick: () => void;
     nextMinesNumber: number;
     isExploded?: boolean;
     isSetFlag?: boolean;
