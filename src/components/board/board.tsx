@@ -135,7 +135,7 @@ export const Board = ({rowNumber, minesNumber}: Props) => {
             }))
         })
         setMatrix(newMatrix)
-    }, [])
+    }, []) //
 
     const initGameBoard = (rowKey: number, slotKey: number) => {
         const rowMinesHm: Record<number, Record<number, boolean>> = {}
