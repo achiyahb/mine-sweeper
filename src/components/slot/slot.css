@@ -1,0 +1,16 @@
+.slot{
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+.slot.unrevealed{
+    background-color: rgb(222, 222, 222);
+    border-color: rgb(245, 245, 245);
+    border-style: outset;
+}
+.slot.revealed{
+    border: 1px solid rgb(156, 156, 156);
+    background-color: rgb(215, 215, 215);
+}
