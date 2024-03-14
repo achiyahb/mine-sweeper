@@ -14,3 +14,6 @@
     border: 1px solid rgb(156, 156, 156);
     background-color: rgb(215, 215, 215);
 }
+.slot.exploded{
+    background-color: rgb(243, 2, 2);
+}
