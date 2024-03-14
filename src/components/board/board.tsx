@@ -46,36 +46,21 @@ export const Board = ({rowNumber, minesNumber}: Props) => {
     }, [tryingCounter])
 
     const setRevealSlot = (rowKey: number, slotKey: number) => {
+        if (!matrix[rowKey]?.[slotKey]) {
+            return
+        }
         const chosenSlot = matrix[rowKey][slotKey];
         if (!chosenSlot.isReveal && !chosenSlot.isMine) {
             chosenSlot.isReveal = true;
             if (chosenSlot.nextMinesNumber) {
                 return
             }
-            if (rowKey - 1 >= 0) {
-                setRevealSlot(rowKey - 1, slotKey)
-                if (slotKey - 1 >= 0) {
-                    setRevealSlot(rowKey - 1, slotKey - 1)
-                }
-                if (slotKey + 1 < rowNumber) {
-                    setRevealSlot(rowKey - 1, slotKey + 1)
-                }
-            }
-            if (rowKey + 1 < rowNumber) {
-                setRevealSlot(rowKey + 1, slotKey)
-                if (slotKey - 1 >= 0) {
-                    setRevealSlot(rowKey + 1, slotKey - 1)
-                }
-                if (slotKey + 1 < rowNumber) {
-                    setRevealSlot(rowKey + 1, slotKey + 1)
-                }
-            }
-            if (slotKey - 1 >= 0) {
-                setRevealSlot(rowKey, slotKey - 1)
-            }
-            if (slotKey + 1 < rowNumber) {
-                setRevealSlot(rowKey, slotKey + 1)
-            }
+            [-1,0,1].forEach((i)=>{
+                [-1,0,1].forEach((j)=>{
+                    if (i === 0 && j === 0) return
+                    setRevealSlot(rowKey + i, slotKey + j)
+                })
+            })
         }
     }
 
@@ -153,7 +138,7 @@ export const Board = ({rowNumber, minesNumber}: Props) => {
     }, [])
 
     const initGameBoard = (rowKey: number, slotKey: number) => {
-        const rowMinesHm:Record<number, Record<number, boolean>> = {}
+        const rowMinesHm: Record<number, Record<number, boolean>> = {}
         for (let i = 0; i < minesNumber;) {
             const index = Math.floor(Math.random() * rowNumber)
             const rowIndex = Math.floor(Math.random() * rowNumber)
