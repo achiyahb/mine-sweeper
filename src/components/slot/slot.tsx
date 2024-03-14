@@ -35,11 +35,11 @@ export const Slot = ({isMine, isReveal, handleClick, nextMinesNumber, isExploded
         onClick={handleClick} onContextMenu={(e)=>{
             handleFlagSetting()
             e.preventDefault()
-        }}>{isSetFlag&&'F'}</div>
+        }}>{isSetFlag&&<div className="unicode-icon">🚩</div>}</div>
     }
     return <div 
     className="slot revealed"
     style={{
         color: convertSlotMinesNumberToColor(nextMinesNumber),
-    }}>{isMine ? 'X' : nextMinesNumber ? nextMinesNumber : ' '}</div>
+    }}>{isMine ? <div className="unicode-icon">&#x1F4A3;</div> : nextMinesNumber ? nextMinesNumber : ' '}</div>
 }
