@@ -12,10 +12,10 @@ interface Props {
 export const ControlPanel = ({setRowNumber, setMinesNumber, minesNumber, rowNumber, setIsGameStart, isGameStart}: Props) => {
     return <Card>
         <CardHeader subheader='settings'/>
-        <TextField type="number" value={rowNumber} onChange={(e) => {
+        <TextField label='Number Of Rows' type="number" value={rowNumber} onChange={(e) => {
             setRowNumber(+e.target.value)
         }}/>
-        <TextField type="number" value={minesNumber} onChange={(e) => {
+        <TextField label='Number Of Mines' type="number" value={minesNumber} onChange={(e) => {
             setMinesNumber(+e.target.value)
         }}/>
         <Button onClick={() => setIsGameStart(true)} disabled={!minesNumber || !rowNumber || isGameStart}>Start Game</Button>
