@@ -73,6 +73,9 @@ export const Board = ({rowNumber, minesNumber}: Props) => {
         setMatrix(matrix)
     }
     const handleClick = (rowKey: number, slotKey: number) => {
+        if (isWin){
+            return
+        }
         if (!tryingCounter) {
             return initGameBoard(rowKey, slotKey)
         }
