@@ -24,6 +24,7 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
     const [flagCounter, setFlagCounter] = useState<number>(0);
     const [remainingSlots, setRemainingSlots] = useState<number>(rowNumber * rowNumber);
     const [isWin, setIsWin] = useState(false);
+    const [isControlPressed, setIsControlPressed] = useState(false);
 
     useEffect(() => {
         if (firstChoice) {
@@ -82,6 +83,9 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
         if (!tryingCounter) {
             return initGameBoard(rowKey, slotKey);
         }
+        if (isControlPressed) {
+            return handleFlagSetting(rowKey, slotKey);
+        }
         const chosenSlot = matrix[rowKey][slotKey];
         if (chosenSlot.isSetFlag) {
             return;
@@ -95,6 +99,25 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
         setTryingCounter(tryingCounter + 1);
         setMatrix(matrix);
     };
+
+    useEffect(() => {
+        const handleKeyDown = (event: any) => {
+            if (event.key === 'Control') {
+                setIsControlPressed(true);
+            }
+        };
+        const handleKeyUp = (event: any) => {
+            if (event.key === 'Control') {
+                setIsControlPressed(false);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('keyup', handleKeyUp);
+        };
+    }, []);
 
     const countNextMines = (matrix: { isMine: boolean; isReveal: boolean; nextMinesNumber: number }[][]) => {
         matrix.forEach((row, rowKey) => {
