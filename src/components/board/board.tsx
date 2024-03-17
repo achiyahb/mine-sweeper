@@ -100,28 +100,10 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
         matrix.forEach((row, rowKey) => {
             row.forEach((slot, slotKey) => {
                 if (slot.isMine) {
-                    const isLeftAllowed = slotKey - 1 >= 0;
-                    const isUpAllowed = rowKey - 1 >= 0;
-                    const isRightAllowed = slotKey + 1 < rowNumber;
-                    const isDownAllowed = rowKey + 1 < rowNumber;
-                    const rowKeys = [rowKey];
-                    const slotKeys = [slotKey];
-                    if (isLeftAllowed) {
-                        slotKeys.push(slotKey - 1);
-                    }
-                    if (isRightAllowed) {
-                        slotKeys.push(slotKey + 1);
-                    }
-                    if (isUpAllowed) {
-                        rowKeys.push(rowKey - 1);
-                    }
-                    if (isDownAllowed) {
-                        rowKeys.push(rowKey + 1);
-                    }
-                    rowKeys.forEach((rKey) => {
-                        slotKeys.forEach((sKey) => {
-                            if (!matrix[rKey][sKey].isMine) {
-                                matrix[rKey][sKey].nextMinesNumber++;
+                    [-1, 0, 1].forEach((i) => {
+                        [-1, 0, 1].forEach((j) => {
+                            if (matrix[rowKey + i]?.[slotKey + j] && !matrix[rowKey + i][slotKey + j].isMine) {
+                                matrix[rowKey + i][slotKey + j].nextMinesNumber++;
                             }
                         });
                     });
