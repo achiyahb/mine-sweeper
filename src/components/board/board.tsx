@@ -67,12 +67,12 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
     };
 
     const revealAll = () => {
-        matrix.forEach((row) => {
-            row.forEach((slot) => {
-                slot.isReveal = true;
+        const revealedMatrix = matrix.map((row) => {
+            return row.map((slot) => {
+                return { ...slot, isReveal: true };
             });
         });
-        setMatrix(matrix);
+        setMatrix(revealedMatrix);
     };
     const handleClick = (rowKey: number, slotKey: number) => {
         if (isWin) {
