@@ -150,8 +150,12 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
 
     const handleFlagSetting = (rowKey: number, slotKey: number) => {
         const chosenSlot = matrix[rowKey][slotKey];
+        if (!chosenSlot.isSetFlag) {
+            setFlagCounter(flagCounter + 1);
+        } else {
+            setFlagCounter(flagCounter - 1);
+        }
         chosenSlot.isSetFlag = !chosenSlot.isSetFlag;
-        setFlagCounter(flagCounter + 1);
         setMatrix(matrix);
     };
 
