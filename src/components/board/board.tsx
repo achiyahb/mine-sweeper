@@ -74,6 +74,7 @@ export const Board = ({ rowNumber, minesNumber }: Props) => {
         });
         setMatrix(revealedMatrix);
     };
+
     const handleClick = (rowKey: number, slotKey: number) => {
         if (isWin) {
             return;
